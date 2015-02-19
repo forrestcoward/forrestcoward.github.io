@@ -1,0 +1,203 @@
+
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Sortable Table</title>
+
+<script language="javascript" type="text/javascript" src="data.js"></script>
+<script language="javascript" type="text/javascript" src="table.js"></script>
+<script language="javascript" type="text/javascript" src="../../lib/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="../../lib/d3.v2.js"></script>
+<script language="javascript" type="text/javascript" src="../../lib/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+<script language="javascript" type="text/javascript" src="../../lib/syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+<link type="text/css" href="../../lib/syntaxhighlighter_3.0.83/styles/shCoreDefault.css" rel="stylesheet" />
+
+
+<style>
+
+	.syntaxhighlighter { overflow-y: hidden !important; }
+
+	body {
+	  font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
+	  font-size:12px;
+	}
+
+	#chart {
+	  width: 500px;
+	  height: 500px;
+	}
+
+	.bodyTable td {
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+
+	.bodyTable tr {
+		height: 40px;
+	}
+
+	.bodyTable tr:hover {
+		background-color:grey;
+	}
+
+	.headerTable th:hover {
+		background-color:grey;
+	}
+
+	.scroll {
+		overflow: auto;
+	}
+	
+</style>
+
+</head>
+ 
+<body>
+
+<h2>Scrollable, Sortable HTML Table with Static Headers Using d3.js</h2>
+<br/>
+<div id="chart"></div>
+
+This HTML table has several features:
+<ol>
+<li>Large amount of data can be displayed because the content is scrollable.</li>
+<li>The headers are static on top of the table, even when scrolling.</li>
+<li>Clicking on a header sorts the table by that property.</li>
+<li>Uses d3.js to append the table together.</li>
+</ol>
+
+<p>I'm illustrating this because this behavior is often desirable but difficult to achieve.</p>
+
+<p> I often see a lot of ugly javascript code where the data is looped through and a table row is appending for each element. It works, but isn't elegant and is inflexible. What if you want to sort the data after? The obvious solution is to sort the data and then redraw the table. d3.js saves us this hassle. Instead of ugly looping code let d3.js do the looping for you. All you need to do is bind the data to the table rows and supply the appropriate sorting functions. The cool thing is the sorting occurs in the DOM and no complete redraw is nessecary.</p>
+
+<p> As for the static headers, this is acheived by using nested tables and works nicely. The trick is to leave room for the scroll bar along side the inner tables. 
+</p>
+
+<h3>Code</h3>
+<pre class="brush: js;">
+    var chart = document.getElementById("chart");
+	var width = chart.offsetWidth;
+	var height = chart.offsetHeight;
+	var valueFunc = function(data) { return data.value; }
+	var textFunc = function(data) { return data.fullname; }
+	var columns = ["State", "Value"];
+	drawTable(myData, "#chart", { width: width, height: height }, valueFunc, textFunc, columns);
+</pre>
+
+One function is used to draw the table: drawTable. There are six parameters:
+<ul>
+<li>data: an array of JSON objects</li>
+<li>tableid: the DOM id of the element to contain the table</li>
+<li>dimensions: contains width and height attributes of the table</li>
+<li>valueFunc: single parameter function which retrieves the value portion of the data</li>
+<li>textFunc: single parameter function which retrieves the text portion of the data</li>
+<li>columns: two element array containing the table headers</li>
+</ul>
+
+<p>The example above illustrates an example call. Note that the variable myData is declared in a seperate file and can be seen below.</p>
+<p>The function assumes the table will have two columns. The first column is string data and the second column is numerical. With a little work you can expand this is to N columns which would be pretty neat.</p>
+
+<p>Here is drawTable code: <a href="table.js">table.js</a>
+
+<h3>Data</h3>
+<p>The dataset can be viewed here: <a href="data.json">data</a>, and below..</p>
+
+<pre>
+[
+	{
+		"fullname" : "Oregon",
+		"value" : 10
+	},
+	{
+		"fullname" : "Washington",
+		"value" : 12
+	},
+	{
+		"fullname" : "Nevada",
+		"value" : 2
+	},
+	{
+		"fullname" : "Florida",
+		"value" : 7
+	},
+	{
+		"fullname" : "Texas",
+		"value" : 7
+	},
+	{
+		"fullname" : "Maine",
+		"value" : 1
+	},
+	{
+		"fullname" : "Idaho",
+		"value" : 34
+	},
+	{
+		"fullname" : "New Mexico",
+		"value" : 3
+	},
+		{
+		"fullname" : "Georgia",
+		"value" : 3
+	},
+		{
+		"fullname" : "Montana",
+		"value" : 9
+	},
+	{
+		"fullname" : "Ohio",
+		"value" : 13
+	},
+	{
+		"fullname" : "Alaska",
+		"value" : 1000
+	}
+]
+</pre>
+
+<h3>Styling</h3>
+<pre>
+	#chart {
+	  width: 500px;
+	  height: 500px;
+	}
+
+	.bodyTable td {
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+
+	.bodyTable tr {
+		height: 40px;
+	}
+
+	.bodyTable tr:hover {
+		background-color:grey;
+	}
+
+	.headerTable th:hover {
+		background-color:grey;
+	}
+
+	.scroll {
+		overflow: auto;
+	}
+</pre>
+
+<script> 
+	var chart = document.getElementById("chart");
+	var width = chart.offsetWidth;
+	var height = chart.offsetHeight;
+	var valueFunc = function(data) { return data.value; }
+	var textFunc = function(data) { return data.fullname; }
+	var columns = ["State", "Value"];
+	drawTable(myData, "#chart", { width: width, height: height }, valueFunc, textFunc, columns);
+	SyntaxHighlighter.all()
+</script>
+<br>
+</body>
+</html>

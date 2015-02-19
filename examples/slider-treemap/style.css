@@ -1,0 +1,31 @@
+block {
+	position: absolute;
+	pointer-events: all;
+}
+
+.cell {
+	font: 9px sans-serif;
+	line-height: 11px;
+	overflow: hidden;
+	position: absolute;
+	text-indent: 2px;
+ }
+
+#chart {
+	height: 550px;
+	width: 1000px;
+	background: black;
+}
+
+#trunc {
+	height: 550px;
+	width: 1000px;
+	background: black;
+}
+
+.syntaxhighlighter { overflow-y: hidden !important; }
+
+body {
+  font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
+  font-size:12px;
+}

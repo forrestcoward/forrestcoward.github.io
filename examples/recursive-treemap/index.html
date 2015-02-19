@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Parent Weighted Treemap</title>
+
+
+<script language="javascript" type="text/javascript" src="../../lib/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="../../lib/d3.v2.js"></script>
+<script language="javascript" type="text/javascript" src="../../lib/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+<script language="javascript" type="text/javascript" src="../../lib/syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+<link type="text/css" href="../../lib/syntaxhighlighter_3.0.83/styles/shCoreDefault.css" rel="stylesheet" />
+
+
+<style>
+
+.syntaxhighlighter { overflow-y: hidden !important; }
+
+body {
+  font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
+  font-size:12px;
+}
+
+#default {
+  width: 900px;
+  height: 500px;
+  background: #bbb;
+}
+
+#chart {
+  width: 900px;
+  height: 500px;
+  background: #bbb;
+}
+
+text {
+  pointer-events: none;
+}
+
+g {
+  pointer-events: none;
+}
+
+rect {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1;
+  pointer-events: all;
+}
+
+svg {
+  font: 9px sans-serif;
+}
+
+.cell {
+  border: solid 1px white;
+  font: 10px sans-serif;
+  line-height: 12px;
+  overflow: hidden;
+  position: absolute;
+  text-indent: 2px;
+}
+
+</style>
+
+</head>
+ 
+<body>
+
+<h2>Recursive Treemap With Parent Weighted Nodes Using d3.js</h2>
+
+This example illustrates two things:
+<ol>
+<li>It displays nodes at all levels of the data, not just leaf nodes.</li>
+<li>There are weights associated with non-leaf nodes. </li>
+</ol>
+
+<p>I'm illustrating this because the default behavior on most treemap visualizations I've seen in javascript do not exhibit this behavior, as I will demonstrate.</p>
+
+<p>The dataset can be viewed here: <a href="data.json">data</a>, and below..</p>
+
+<pre>
+{
+  "name" : "flare",
+  "value": 20,
+  "type": "node",
+  "children": [
+    {
+      "name" : "flare.analytics",
+      "value": 12,
+      "type": "node",
+      "children": [
+        {
+          "name" : "flare.analytics.cluster",
+          "value": 10,
+          "type": "node",
+          "children": [
+            {
+              "name" : "flare.analytics.cluster.AgglomerativeCluster",
+              "value": 2,
+              "type": "node"
+            },
+            {
+              "name" : "flare.analytics.cluster.CommunityStructure",
+              "value": 6,
+              "type": "node",
+              "children" : [
+                {
+                "name" : "flare.analytics.cluster.CommunityStructure.A",
+                "value": 3,
+                "type": "node",
+                "children" : [
+                  {
+                    "name" : "flare.analytics.cluster.CommunityStructure.A.Debug",
+                    "value": 1,
+                    "type": "node"
+                  },
+                  {
+                    "name" : "flare.analytics.cluster.CommunityStructure.A.Run",
+                    "value": 1,
+                    "type": "node"
+                  }
+                ]
+                },
+                {
+                "name" : "flare.analytics.cluster.CommunityStructure.B",
+                "value": 1,
+                "type": "node"
+                }                
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name" : "flare.animate",
+      "value": 4,
+      "type": "node",
+    }
+  ]
+}
+</pre>
+
+<p>You will notice every node has a value associated with it, not just leaf nodes. For example, <b>flare.animate</b> has a value of 4 and <b>flare.analytics</b> has a value of 12. These are the only two children of <b>flare</b>, but <b>flare</b> has a value of 20. This means not including flare's children, flare has a value of 4, but adding its children the value is 20 as declared in the data.</p>
+
+<p>In the graph below these weights are illustrated and you see a box for <b>flare</b>, which has a size of 4. Hover colors are used for useful visualization. For example, if you hover over <b>flare</b> it turns <b><font color="#478847">dark green</font></b> to indicate the selection, but all the children of <b>flare</b> also turn <b><font color="#66C266">light green</font></b>.
+
+<h4> Recursive Weighted Behavior </h4>
+<p id="chart"></p>
+
+<br>
+<h4> Default Behavior </h4>
+<p>This is the default behavior of the d3.js treemap with the same data set as above.</p>
+
+<p>Even though values are declared on non-leaf nodes in the data, the default behavior ignores these. Instead, values are propagated up the tree from the leafs. For example, if A has two children, B and C both with value 1, then A's value is 2 - just the sum of its children. As a result, only leaf nodes get displayed on the graph. This is appropriate for some situations but not others. Consider if you are visualizing lines of code in a namespace hierarchy. A namespace can have lines of code itself in addition to the lines of code in children namespaces.</p>
+
+<p id="default"></p>
+
+<h4> Achieving This Behavior </h4>
+
+<p> A little bit of preprocessing on the data did the trick. The strategy is to recurse all the way down to the leaves and build outward. Children are added at each level to accomodate for the amount of space the parent is supposed to take up.</p>
+
+<pre class="brush: js;">
+	/* Performs preprocessing on the data to add in filler nodes. */
+	function addFillerValues(d, valueString, nameString, valueFunc, textFunc) {
+		if(d.children) {
+			var index;
+			var sum = 0;
+			for(index = 0; index < d.children.length; index++) {
+				addFillerValues(d.children[index], valueString, nameString, valueFunc, textFunc);
+				sum += valueFunc(d.children[index]);
+			}
+			
+			var difference = valueFunc(d) - sum;
+			var obj = { };
+			obj[nameString] =  textFunc(d);
+			obj[valueString] = difference;
+			obj["type"] = "filler";
+			d.children.push(obj);
+		}
+	}
+	
+	valueFunc = function(d) { return d.value; };
+	nameFunc = function(d) { return d.name; };
+	addFillerValues(myData, "value", "name", valueFunc, nameFunc);
+
+</pre>
+
+<p> The more difficult part is actually recursing through the data and adding the appropriate elements to the document object model. </p>
+
+<pre class="brush: js;">
+
+	function display(d) {
+		var g1 = svg.insert("g");
+		recursiveDisplay(g1, d, 0);
+	}
+
+	function recursiveDisplay(g1, d, depth) {
+
+		// For each child of the root, append a "g" and associate a single child with that "g".
+		var g = g1.selectAll("g")
+			.data(d.children)
+			.enter().append("g");
+
+		// Filters the selection, returning a new selection that contains only the elements for which the specified selector is true
+		// For each "g" we just appended, add the class "children" if the node has children (it may not have any).
+		g.filter(function (d) {
+			return d.children;
+		}).classed("children", true);
+
+		// Add rects for children at this depth, but only if there are no children beneath. 
+		g.selectAll("rect")
+			.data(function (d) {
+				// Don't worry about children here, we are going to hit them next iteration. 
+				if(d.children) {
+					return [];
+				} else {
+					return [d];
+				}
+			})
+			.enter().append("rect")
+			.attr("class", "child")
+			.call(rect);
+			
+		// If the "g" holds a "filler" rect, add the class "fill"
+		g.filter(function(d) {
+			return d.type === "filler";
+		}).classed("fill", true);
+		
+		// If the "g" does not have a class (it isn't "children" or "fill"), add the "nochildren" class.
+		g.filter(function(d) {
+			return !$(this).attr("class") === true;
+		}).classed("nochildren", true);
+		
+		// Add hover events to "filler" rects.
+		g.filter(function(d) {
+			return d.type === "filler";
+		}).on("mouseover", function(d) {
+			$(this).parent().find("rect").css("fill", "#66C266");
+			$(this).find("rect").css("fill", "#478847");
+		}).on("mouseout", function(d) {
+			$(this).parent().find("rect").css("fill", "none");
+			$(this).find("rect").css("fill", "none");
+		});
+		
+		// Add hover events to "nochildren" rects.
+		g.filter(function(d) {
+			return $(this).attr("class") === "nochildren";
+		}).on("mouseover", function(d) {
+			$(this).find("rect").css("fill", "#478847");
+		}).on("mouseout", function(d) {
+			$(this).find("rect").css("fill", "none");
+		});
+
+		// Add text for children at this depth.
+		g.filter(function (d) {
+			return !d.children;
+		}).append("text")
+			.attr("dy", ".75em")
+			.text(nameFunc)
+			.call(text);
+
+		// Now do it for the next depth. The trick line here is "d3.select(this)". 
+		g1.selectAll("g").each(function (d) {            
+			if (d.children) {
+				recursiveDisplay(d3.select(this), d, depth+1);
+			}
+		});
+	}
+
+	function text(text) {
+		text.attr("x", function (d) { return x(d.x) + 6; })
+			.attr("y", function (d) { return y(d.y) + 6; });
+	}
+
+	function rect(rect) {
+		rect.attr("x", function (d) { return x(d.x); })
+			.attr("y", function (d) { return y(d.y); })
+			.attr("width", function (d) { return x(d.x + d.dx) - x(d.x); })
+			.attr("height", function (d) { return y(d.y + d.dy) - y(d.y); });
+	}
+</pre>
+
+<p>
+I started with the code from <a href="http://bost.ocks.org/mike/treemap/">zoomable treemaps</a> and modified from there. The full source for the example treemap at the top of the page is here: <a href="recursive-treemap.js">example code</a>. Important styling is here: <a href="styling.css">styling</a>. Note that I load the data from a separate script, but you can use the d3.json(url) call if you like. Also note I use jquery to make some selections. The depth gets passed around but is never used, so you can easily imagine creating a cut off at an arbitrary depth. 
+</p>
+
+<p>
+<a href="http://d3js.org/">d3.js</a> is an awesome library and I hope more people choose to use it in the future. 
+</p>
+<br>
+
+<script language="javascript" type="text/javascript" src="data.js"></script>
+<script language="javascript" type="text/javascript" src="recursive-treemap.js"></script>
+<script language="javascript" type="text/javascript" src="default-treemap.js"></script>
+<script> SyntaxHighlighter.all()  </script>
+
+</body>
+</html>

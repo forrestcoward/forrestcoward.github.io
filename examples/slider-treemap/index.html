@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Slider Treemap</title>
+	
+	<script language="javascript" type="text/javascript" src="../../lib/jquery.js"></script>
+	<script language="javascript" type="text/javascript" src="../../lib/jquery.ui.v1.8.21.js"></script>
+	<script language="javascript" type="text/javascript" src="../../lib/d3.v2.js"></script>
+		
+    <script language="javascript" type="text/javascript" src="treemap.js"></script>
+	<script language="javascript" type="text/javascript" src="data.js"></script>
+	<script language="javascript" type="text/javascript" src="main.js"></script>
+	<script language="javascript" type="text/javascript" src="color.js"></script>
+	<script language="javascript" type="text/javascript" src="slider.js"></script>
+	<link rel="stylesheet" type="text/css" href="slider.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	
+
+	<script language="javascript" type="text/javascript" src="../../lib/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+	<script language="javascript" type="text/javascript" src="../../lib/syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+	<link type="text/css" href="../../lib/syntaxhighlighter_3.0.83/styles/shCoreDefault.css" rel="stylesheet" />
+</head>
+<body>
+
+<h2>Dynamic Treemap Filtering using d3.js</h2>
+
+<h4> The Problem </h4>
+<p>
+A treemap is a well known visualization to compactly display lots of data, but what happens when you want to constantly update and animate it? The only available option is to rerun the treemap layout algorithm each update (the position of each box must be recalculated). If your data is small you can get away with it, but once the data reaches even a medium size the layout algorithm will take too long to run and your on screen updates will suffer unacceptable amounts of computational delay. 
+</p>
+
+<p>
+I ran into this problem during one of my intern project at Microsoft. My goal was to implement a dual slider that can be dragged to filter, animate, and update a treemap on the screen. In particular, the dual slider represents a time range, and the treemap represents bug fixes per file for a small portion of the Visual Studio source code. The user should be able to smoothly slide the slider and see the size of certain files grow or shrink, displaying the relative bugginess of each file in the system compared to another between any two points in time when the first and most current bugs were fixed. 
+</p>
+
+<p>
+For example, file A.cs might have had three bug fixes between 3/4/2011 and 6/20/2011, in which case the size of A.cs would be three if slider selected this date range. 
+</p>
+
+<h4> Two Treemaps Are Better Than One </h4>
+
+<p>
+I initially ran into the problem I described above: the sliding experience simply wasn't smooth or precise because an update was too time consuming. The partial solution is during a slide don't display as much data (cut off after a certain depth in the tree). The justification is when a user is sliding along they aren't interested in single files; they are interested in high level information such as how two top level directories compare in their bug count over time. Once the sliding action is complete, non-truncated data can once again be displayed.
+</p>
+
+<p>
+This was a promising solution. Initially draw the full depth treemap. When the user begins a slide redraw the treemap but with less granularity (much less data) and base animations off this. When the slide action is complete redraw the full depth treemap. This almost worked except that I didn't account for the time it actually takes to append the new treemap to the screen. The result was that the intial slide lagged considerably while the truncated treemap was being appended to the DOM. However, once appended, the slide animations were smooth.
+</p>
+
+<p>
+The solution was then clear: use two treemaps, but only display one at a time! This avoids the overhead of redraws (you still need to transition and animate), but costs slightly more on the first load, which isn't a problem. When a slide begins hide the full depth treemap and display the truncated treemap. On slide stop do the opposite. Note that there is still a delay updating the full depth treemap but this is expected.
+</p>
+
+<h2> The Treemap </h2>
+<h4> Bugs Fixes Per File In Time Range </h4>
+<br />
+<div id="slider">    	   
+	<div id="slider-min"></div>
+	<div id="slider-max"></div>
+	<div id="slider-left"></div>
+	<div id="slider-right"></div>
+</div>
+
+<br />
+<br />
+<div id="chart"></div>
+<div id="trunc"></div>
+<br />
+<h2> Other Implementation Notes </h2>
+<h4> The Data </h4>
+
+<p> 
+As mentioned earlier this is real data from the source code of Visual Studio that spans a period of two years. I wrote the algorithm (very non-trivial) that talks to the Team Foundation Server and computes this information (bug fixes per file) and spits out hierarchal JSON data to be consumed by d3. I may write more on this later but it is too detailed for this post.
+</p>
+
+<p>
+A leaf node in the data looks like this:
+</p>
+
+<pre>
+{
+	"fullname": "$/Path/To/File/File.cs",
+	"name": "File.cs",
+	"type": "file",
+	"bugcount": 11,
+	"bugdates":
+	[
+		"2010-11-12T12:11:51.05-08:00",
+		"2010-11-30T10:52:56.177-08:00",
+		"2011-01-27T16:01:48.61-08:00",
+		"2011-02-22T18:56:10.99-08:00",
+		"2011-03-10T15:00:02.03-08:00",
+		"2011-04-01T11:57:49.07-07:00",
+		"2011-04-01T11:57:49.07-07:00",
+		"2011-05-26T18:53:25.523-07:00",
+		"2011-04-05T11:07:32.03-07:00",
+		"2011-09-20T17:06:36.35-07:00",
+		"2012-07-24T16:28:59.59-07:00"
+	]
+}
+</pre>
+
+<h4> Coloring </h4>
+
+<p>
+A treemap depends on proper coloring otherwise it's practically useless as a visualization.
+</p>
+
+<p>
+The coloring algorithm I use is simple yet effective (although it does need a bit more refinement). I use HSL values. Starting at the root the entire hue spectrum is available. At each split in the tree, divide the available hue equally and decrease both saturation and lightness by an amount relative to the maximum depth of the tree (for example 100/depth so you don't go below 0). An alternative is to do multiplicative decreases, but I found it didn't look as good.
+</p>
+
+<p>
+In the treemap you can cleary see this. The first split is three way: the reds, the greens, and the blues. Inside the reds we observe more splits as different shades of red, oranges and a little yellow. In the blues and greens there are also different shades which indicate additional splits. Colors which are closer to each other on the rainbow spectrum means relative closeness within the file hierarchy. When sliding these colors are even more pronounced. In addition, the darker and more saturated colors indicate depth (although depth isn't that important in terms of bugs fixed).
+</p>
+
+<h4> Slider </h4>
+
+<p>
+The dual slider is built on top of jquery's dual slider. Nothing difficult. 
+</p>
+
+<br>
+<script>
+	main();
+</script>
+ 
+</body>
+</html>
