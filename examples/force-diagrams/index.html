@@ -1,1 +1,179 @@
-Coming soon...
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Force Diagrams and Latent Links</title>
+<script language="javascript" type="text/javascript" src="../../lib/jquery.js"></script>
+<script src="http://d3js.org/d3.v3.min.js" type="text/javascript"></script>
+<script language="javascript" type="text/javascript" src="../../lib/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+<script language="javascript" type="text/javascript" src="../../lib/syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+<script language="javascript" type="text/javascript" src="force.js"></script>
+<script language="javascript" type="text/javascript" src="data.js"></script>
+<link type="text/css" href="force.css" rel="stylesheet" />
+<link type="text/css" href="general.css" rel="stylesheet" />
+<link type="text/css" href="../../lib/syntaxhighlighter_3.0.83/styles/shCoreDefault.css" rel="stylesheet" />
+</head>
+<body>
+
+<h2>Clustering Force Diagrams With Latent Links</h2>
+
+Recently I found myself wanting to display some simple diagrams that visualize relationships between nodes in a graph. After searching online, I decided that <a href="https://github.com/mbostock/d3/wiki/Force-Layout">d3's force layout</a> provided what I was looking for. Unfortunately, the naive implementation of only defining links that encode the relationships in the graph led to unintuitive diagrams where the dependencies and prerequisties of a node distribute themselves equally around that node. Ideally, I wanted the dependencies of a node in one cluster, and the prerequisites of the same node in another cluster. This was achievable through defining latent links between dependent nodes, and latent links between prerequisite nodes.
+
+<br/>
+<br/>
+
+To make this possible, I needed to store more information in links. For example, is a link a latent link or not? If a link is latent, then its link strength should be greater, and link distance smaller, to pull the latently linked nodes together. For example, this is how I define my link distance and link strength functions I pass to d3's force layout:
+
+<pre class="brush: js;"> 
+    var calculateLinkStrength = function (link) {
+        return link.isLatent ? .5 : .2;
+    };
+    
+    var calculateLinkDistance = function (link) {
+        return link.isLatent ? 8 : 100;
+    };
+</pre>
+
+I also store more information on the nodes, such as the number of incoming and outgoing links, that allows for a richer charge and node radius functions.
+
+<h2>My Force Layout API</h2>
+
+If you would like to use or leverage this work, it available on my <a href="#">github</a> (along with usage documentation). Here is gist of it:
+
+<pre class="brush: js;"> 
+// Draws force diagram utilizing d3's force layout (see https://github.com/mbostock/d3/wiki/Force-Layout)
+//
+// graph: a mapping of strings to list of strings, encoding the visible links in graph
+// hiddenGraph: a mapping of strings to list of strings, encoding latent links in the graph
+// width: the width of the diagram
+// height: the height of the diagram
+// id: the id of the element to place the diagram
+// nodeClick: the node on click function
+// nodeClass: the function that defines the class of each node
+// layoutParameters: a dictionary of parameters that are passed to d3's force layout. If not provided, the d3.js defaults are used. The allowed keys are:
+//    "calculateNodeRadius" - calculates the radius of each node
+//    "calculateNodeCharge" - calculates the charge of each node
+//    "calculateLinkDistance" - calculates/influences the distance of each link
+//    "calculateLinkStrength" - calculates/influences the strength of each link
+//    "friction" - See d3 documentation, value between 0 and 1 inclusive
+//    "gravity" -  See d3 documentation, value greater than or equal to 0
+//
+function drawForceDiagram(graph, hiddenGraph, width, height, id, nodeClick, nodeClass, layoutParameters);
+</pre>
+
+<h2>Examples</h2>
+
+Nodes are represented by circles. Hover over a node to see its relationship with other nodes.
+<br/>
+<br/>
+<b><font color="purple">Purple</font></b> circles represent nodes that have no dependencies.
+<br/>
+<b><font color="green">Green</font></b> circles represent nodes which no other nodes depends on.
+<br/>
+A <b><font color="red">red</font></b> connection from selected node to target node indicates the target node depends on the selected node.
+<br/>
+A <b><font color="blue">blue</font></b> connection from selected node to target node indicates the target node is dependent on the selected node.
+<br/>
+<br/>
+
+Below are three side-by-side examples where the left diagram does not utilize latent links and the right diagram does.
+
+<table>
+    <tr>
+        <th><h4>Without Latent Links</h4></th>
+        <th><h4>With Latent Links</h4></th>
+    </tr>
+    
+    <tr>
+        <td><div id="example1-nohidden"></div></td>
+        <td><div id="example1"></div></td>
+    </tr>
+    
+    <tr>
+        <td><div id="example2-nohidden"></div></td>
+        <td><div id="example2"></div></td>
+    </tr>
+    
+    <tr>
+        <td><div id="example3-nohidden"></div></td>
+        <td><div id="example3"></div></td>
+    </tr>
+</table>
+<script> SyntaxHighlighter.all()  </script>
+<script>
+    var calculateNodeRadius = function (node) {
+        if (node.incomingLinks == 0) { // Nothing depends on this node
+            return 5;
+        } else if (node.links == node.incomingLinks) { // No dependencies
+            return 5;
+        } else {
+            return 8;
+        }
+    };
+
+    var classNode = function (node) {
+        var classes = "node ";
+        if (node.incomingLinks == 0) { // Nothing depends on this node
+            classes += " leafNode";
+        } else if (node.links == node.incomingLinks) { // No dependencies
+            classes += " immediateNode";
+        } else {
+            classes += " intermediateNode";
+        }
+        return classes;
+    };
+
+    var calculateNodeCharge = function (node) {
+        if (node.incomingLinks == 0) { // Nothing depends on this node
+            return -450;
+        } else if (node.links == node.incomingLinks) { // No dependencies
+            return -450;
+        } else {
+            return -350;
+        }
+    };
+
+    var calculateLinkDistance = function (link) {
+        if (link.isLatent) {
+            return 8;
+        } else {
+            return 100;
+        }
+    };
+
+    var calculateLinkStrength = function (link) {
+        if (link.isLatent) {
+            return .6;
+        } else {
+            return .2;
+        }
+    };
+
+    var clickNode = function (node) { }
+
+    $(document).ready(function () {
+        var width = 450, height = 370;
+        var friction = .3;
+        var gravity = .2;
+
+        var layoutParameters =
+        {
+            "calculateNodeCharge": calculateNodeCharge,
+            "calculateNodeRadius": calculateNodeRadius,
+            "calculateLinkDistance": calculateLinkDistance,
+            "calculateLinkStrength": calculateLinkStrength,
+            "friction": .3,
+            "gravity": .2
+        }
+
+        drawForceDiagram(exampleGraph1, exampleHiddenGraph1, width, height, "#example1", clickNode, classNode, layoutParameters);
+        drawForceDiagram(exampleGraph2, exampleHiddenGraph2, width, height, "#example2", clickNode, classNode, layoutParameters);
+        drawForceDiagram(exampleGraph3, exampleHiddenGraph3, width, height, "#example3", clickNode, classNode, layoutParameters);
+        
+        drawForceDiagram(exampleGraph1, {}, width, height, "#example1-nohidden", clickNode, classNode, layoutParameters);
+        drawForceDiagram(exampleGraph2, {}, width, height, "#example2-nohidden", clickNode, classNode, layoutParameters);
+        drawForceDiagram(exampleGraph3, {}, width, height, "#example3-nohidden", clickNode, classNode, layoutParameters);
+    });
+</script>
+</body>
+</html>
