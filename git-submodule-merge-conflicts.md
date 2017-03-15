@@ -31,7 +31,7 @@ index <commit1>,<commit2>..0000000
 +++ b/<submodule>
 ```
 
-<i>2) The submodule does not exist on disk</i>
+<i>2) The submodule repository does not exist on disk</i>
 
 ```
 > git diff
