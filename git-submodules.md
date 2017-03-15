@@ -1,6 +1,8 @@
+<h1>Submodule Merge Conflcits</h1>
+
 If the submodule commit diverges independently in some set of branches, this introduces the possibility of merge conflicts within the submodule path when these branches are merged.
 
-<b>Examining Submodule Merge Conflicts</b>
+<h4>Examining Submodule Merge Conflicts</h4>
 
 ```git status``` will tell you which submodules have conflicts:
 
@@ -38,7 +40,7 @@ index <commit1>,<commit2>..0000000
 ++Subproject commit 0000000000000000000000000000000000000000
 ```
 
-<b>Resolving Submodule Merge Conflicts</b>
+<h4>Resolving Submodule Merge Conflicts</h4>
 
 The git metadata for a submodule is stored in ```.git\modules\<submodule>```. Resolution of a submodule merge conflict is essentially restoring this folder to proper state and then running ```git add <path-to-submodule>```.
 
