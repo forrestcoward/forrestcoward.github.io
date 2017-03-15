@@ -1,6 +1,6 @@
 <h1>Submodule Merge Conflcits</h1>
 
-If the submodule commit diverges independently in some set of branches, this introduces the possibility of merge conflicts within the submodule path when these branches are merged.
+If super repository submodule commit diverges independently in some set of branches, this introduces the possibility of merge conflicts within the submodule path when these branches are merged.
 
 <h4>Examining Submodule Merge Conflicts</h4>
 
@@ -44,7 +44,7 @@ index <commit1>,<commit2>..0000000
 
 The git metadata for a submodule is stored in ```.git\modules\<submodule>```. Resolution of a submodule merge conflict is essentially restoring this folder to proper state and then running ```git add <path-to-submodule>```.
 
-If the submodule exists on disk (scenario one above), one resolution strategy is entering the submodule directory and check out the submodule to the correct commit id:
+If the submodule exists on disk (scenario one above), one resolution strategy is enter the submodule directory and check out the submodule to the correct commit id:
 
 ```
 cd <path-to-submodule>
@@ -53,7 +53,7 @@ cd <repository-root>
 git add <path-to-submodule>
 ```
 
-Another possible resolution strategy is:
+Another similiar resolution strategy is:
 
 ```
 git checkout --ours <path-to-submodule> 
@@ -96,4 +96,4 @@ All conflicts fixed but you are still merging.
   (use "git commit" to conclude merge)
 ```
 
-Finally, if the submodule does not exist on disk, you could clone the submodule into the submodule location and use a strategy from scenario one.
+Finally, if the submodule does not exist on disk, you could manually clone the submodule into the submodule path and use a strategy from scenario one.
