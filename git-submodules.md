@@ -2,9 +2,8 @@
 
 If the submodule commit diverges independently in some set of branches, this introduces the possibility of merge conflicts within the submodule path when these branches are merged.
 
-The ```git status``` message is such:
-
 ```
+> git status
 You have unmerged paths.
   (fix conflicts and run "git commit")
   (use "git merge --abort" to abort the merge)
