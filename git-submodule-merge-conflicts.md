@@ -1,6 +1,6 @@
-<h1>Submodule Merge Conflcits</h1>
+<h1>Git Submodule Merge Conflicts</h1>
 
-If super repository submodule commit diverges independently in some set of branches, this introduces the possibility of merge conflicts within the submodule path when these branches are merged.
+A submodule merge conflict is possible if the submodule commit diverges independently in some set of branches. When two branches from this set are merged together, git cannot not resolve which commit of the submodule to use as the merge result, resulting in a conflict.
 
 <h4>Examining Submodule Merge Conflicts</h4>
 
@@ -17,9 +17,9 @@ Unmerged paths:
         both modified:   <submodule>
 ```
 
-This status message will appear regardless of the [ignore](https://git-scm.com/docs/gitmodules#gitmodules-submoduleltnamegtignore) setting of the submodule, because this conflict represents a conflict in the super repository, not the submodule itself.
+This status message will appear regardless of the [ignore](https://git-scm.com/docs/gitmodules#gitmodules-submoduleltnamegtignore) setting of the submodule, because this conflict represents a conflict in the super repository content, not the submodule content.
 
-Run ```git diff``` to discover what the conflicting commits are. There are multiple outputs depending on the state of the repository:
+Run ```git diff``` to reveal the conflicting commits. Multiple outputs exist depending on the state of the repository:
 
 <i>1) The submodule repository exists on disk</i>
 
