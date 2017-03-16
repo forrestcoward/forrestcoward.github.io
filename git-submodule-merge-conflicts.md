@@ -19,7 +19,7 @@ Unmerged paths:
 
 This status message will appear regardless of the [ignore](https://git-scm.com/docs/gitmodules#gitmodules-submoduleltnamegtignore) setting of the submodule, because this conflict represents a conflict in the super repository content, not the submodule content.
 
-Run ```git diff``` to reveal the conflicting commits. Multiple outputs exist depending on the state of the repository:
+Run ```git diff``` to reveal the conflicting commits. Multiple outputs exist depending on the state of the submodule repository:
 
 <i>1) The submodule repository exists on disk</i>
 
