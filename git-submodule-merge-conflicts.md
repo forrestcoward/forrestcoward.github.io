@@ -44,7 +44,7 @@ index <commit1>,<commit2>..0000000
 
 The git metadata for a submodule is stored in ```.git\modules\<submodule>```. Resolution of a submodule merge conflict is essentially restoring this folder to proper state and then running ```git add <path-to-submodule>```.
 
-If the submodule exists on disk (scenario one above), one resolution strategy is enter the submodule directory and check out the submodule to the correct commit id:
+If the submodule exists on disk (scenario one above), one resolution strategy is to checkout the correct commit from within the submodule:
 
 ```
 cd <path-to-submodule>
