@@ -1,6 +1,6 @@
 <h1>Git Submodule Merge Conflicts</h1>
 
-A submodule merge conflict is possible if the submodule commit diverges independently in some set of branches. When two branches from this set are merged together, git cannot not resolve which commit of the submodule to use as the merge result, resulting in a conflict.
+A submodule merge conflict is possible if the submodule commit diverges independently in some set of branches. When two branches from this set are merged, git cannot not resolve which commit is correct, resulting in a conflict.
 
 <h4>Examining Submodule Merge Conflicts</h4>
 
