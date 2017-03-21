@@ -143,7 +143,7 @@ function Replace-Text($file, $find, $replace)
 
 This find and replace function will preserve end of line semantics and will not strip the BOM from UTF-8 files. Note that if you are dealing with UTF-8 files without BOMs, this will not be sufficient because ```Get-FileEncoding``` will detect the file as ASCII.
 
-However, According to the [Unicode standard](http://www.unicode.org/versions/Unicode5.0.0/ch02.pdf), the BOM for UTF-8 files is not recommended:
+Do note that according to the [Unicode standard](http://www.unicode.org/versions/Unicode5.0.0/ch02.pdf), the BOM for UTF-8 files is not recommended:
 
 ```
 2.6 Encoding Schemes
