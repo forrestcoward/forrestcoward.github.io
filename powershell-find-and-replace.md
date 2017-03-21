@@ -34,7 +34,7 @@ However, there are some problems here:
 
 After running my replacement routine, a ```git diff``` revealed that in addition to performing the replacement, I added an extra new  line to files that had no trailing new line initially, and stripped away the BOM from files that began with it.
 
-<h2>Preserving End Of Line</h2>
+<h2>Preserving End Of File New Line Semantics</h2>
 
 The strategy here is just to switch to the popular ```ReadAllText``` and ```WriteAllText``` methods in .NET:
 
