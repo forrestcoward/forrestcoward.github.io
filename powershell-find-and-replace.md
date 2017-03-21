@@ -12,7 +12,7 @@ The basic approach to replacing text in Powershell is using the [Replace](https:
 
 We can script up a simple Find-Replace script like this:
 
-```
+```powershell
 function Replace-Text($file, $find, $replace)
 {
     $content = Get-Content $file
@@ -38,7 +38,7 @@ After running my replacement routine, a ```git diff``` revealed that in addition
 
 The strategy here is just to switch to the popular ```ReadAllText``` and ```WriteAllText``` methods in .NET:
 
-```
+```powershell
 function Replace-Text($file, $find, $replace)
 {
     $content = [IO.File]::ReadAllText($file)
@@ -56,7 +56,7 @@ Alternatively, you could try to use the [-NoNewLine](https://blogs.technet.micro
 
 This one is a bit trickier, because you first have to detect the encoding, and then use the same encoding to write back to the file. I used the following [script](https://gist.github.com/jpoehls/2406504) to detect a file's encoding.
 
-```
+```powershell
 function Get-FileEncoding
 {
     [CmdletBinding()] 
@@ -145,8 +145,8 @@ This find and replace function will preserve end of line semantics and will not 
 
 Do note that according to the [Unicode standard](http://www.unicode.org/versions/Unicode5.0.0/ch02.pdf), the BOM for UTF-8 files is not recommended:
 
-```
-2.6 Encoding Schemes
 
-... Use of a BOM is neither required nor recommended for UTF-8, but may be encountered in contexts where UTF-8 data is converted from other encoding forms that use a BOM or where the BOM is used as a UTF-8 signature. See the “Byte Order Mark” subsection in Section 16.8, Specials, for more information.
-```
+> 2.6 Encoding Schemes
+
+> ... Use of a BOM is neither required nor recommended for UTF-8, but may be encountered in contexts where UTF-8 data is converted from other encoding forms that use a BOM or where the BOM is used as a UTF-8 signature. See the “Byte Order Mark” subsection in Section 16.8, Specials, for more information.
+
