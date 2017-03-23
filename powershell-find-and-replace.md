@@ -150,3 +150,6 @@ Do note that according to the [Unicode standard](http://www.unicode.org/versions
 
 > ... Use of a BOM is neither required nor recommended for UTF-8, but may be encountered in contexts where UTF-8 data is converted from other encoding forms that use a BOM or where the BOM is used as a UTF-8 signature. See the “Byte Order Mark” subsection in Section 16.8, Specials, for more information.
 
+<h2>Final Thoughts</h2>
+
+Basically, use .NET - not native powershell functions :)
