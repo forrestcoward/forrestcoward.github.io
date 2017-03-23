@@ -64,7 +64,7 @@ function deleteremotebranch($branch)
 <h3>Delete Local & Remote Git Branch</h3>
 
 ```powershell
-function deleteBranch($branch) 
+function deletebranch($branch) 
 {
     deleteLocalBranch($branch)
     deleteRemoteBranch($branch)
