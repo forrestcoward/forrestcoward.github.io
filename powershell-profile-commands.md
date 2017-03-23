@@ -99,5 +99,14 @@ function findstrtarget ($string, $target)
 }
 ```
 
+<h3>View Path Variables</h3>
+
+```powershell
+function printpath
+{
+    $env:path.Split(";") | ForEach { Write-Host $_ }
+}
+```
+
 
 
