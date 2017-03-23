@@ -90,7 +90,7 @@ function findstrall ($string)
 }
 ```
 
-<h3>Search Recursively For Test In Target Files</h3>
+<h3>Search Recursively For Text In Target Files</h3>
 
 ```powershell
 function findstrtarget ($string, $target) 
