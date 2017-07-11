@@ -1,6 +1,6 @@
-<h1>Submodule Merge Conflcits</h1>
+<h1>Git Submodule Merge Conflicts</h1>
 
-If super repository submodule commit diverges independently in some set of branches, this introduces the possibility of merge conflicts within the submodule path when these branches are merged.
+A submodule merge conflict is possible if the submodule commit diverges independently in some set of branches. When two branches from this set are merged, git cannot not resolve which commit is correct, resulting in a conflict.
 
 <h4>Examining Submodule Merge Conflicts</h4>
 
@@ -17,9 +17,9 @@ Unmerged paths:
         both modified:   <submodule>
 ```
 
-This status message will appear regardless of the [ignore](https://git-scm.com/docs/gitmodules#gitmodules-submoduleltnamegtignore) setting of the submodule, because this conflict represents a conflict in the super repository, not the submodule itself.
+This status message will appear regardless of the [ignore](https://git-scm.com/docs/gitmodules#gitmodules-submoduleltnamegtignore) setting of the submodule, because this conflict represents a conflict in the super repository content, not the submodule content.
 
-Run ```git diff``` to discover what the conflicting commits are. There are multiple outputs depending on the state of the repository:
+Run ```git diff``` to reveal the conflicting commits. Multiple outputs exist depending on the state of the submodule repository:
 
 <i>1) The submodule repository exists on disk</i>
 
@@ -31,7 +31,7 @@ index <commit1>,<commit2>..0000000
 +++ b/<submodule>
 ```
 
-<i>2) The submodule does not exist on disk</i>
+<i>2) The submodule repository does not exist on disk</i>
 
 ```
 > git diff
@@ -44,7 +44,7 @@ index <commit1>,<commit2>..0000000
 
 The git metadata for a submodule is stored in ```.git\modules\<submodule>```. Resolution of a submodule merge conflict is essentially restoring this folder to proper state and then running ```git add <path-to-submodule>```.
 
-If the submodule exists on disk (scenario one above), one resolution strategy is enter the submodule directory and check out the submodule to the correct commit id:
+If the submodule exists on disk (scenario one above), one resolution strategy is to checkout the correct commit from within the submodule:
 
 ```
 cd <path-to-submodule>
