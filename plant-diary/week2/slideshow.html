@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link type="text/css" href="../css/slideshow.css" rel="stylesheet" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<title>Plant Diary Week 2</title>
+</head>
+<body>
+    <h1>[10/1/2018] Plant Diary Week 2</h1>
+    We're now in week 2 of the plant diary. It is going to take me a little work to keep this thing going and I'm skeptical I'm going to be able to do it.
+    Highlights this week include the death of Ray and the introduction of Georgia, who was here last week but was sadly forgotten.
+    <br />
+    <br />
+    Overall the prospect of caring for this many plants is a bit daunting. Each plant has different light, water and soil requirements. Right now I'm just focused on watering each week
+    and maybe adjusting location in room if a plant isn't doing very well.
+    <br />
+    <br />
+    <a href="..\index.html">Diary Home</a>
+    <br />
+    <br />
+    <br />
+
+    <div id="slideshow" class="slideshow-container">
+
+        <div class="slide fade">
+            <div class="title">Benji</div>
+            <img src="images\benji-2.jpg">
+            <div class="text">
+                Benji is doing about the same as last week. It's hard to tell if new leaves are coming in yet.
+            </div>
+        </div>
+
+        <div class="slide fade">
+            <div class="title">Ellie</div>
+            <img src="images\ellie-2.jpg">
+            <div class="text">
+                Ellie got a new pot! Overall it seems like Ellie is doing alright but one of her leaves is dying. To avoid two of the leaves from hanging too badly I wrapped them around the more sturdy stems to keep them upright.
+                One thing about Ellie is she is huge. I have had to turn her a few times to get into the storage space. Her leaves are large and flimsy and I've needed to wipe them down as they accumlate dust.
+            </div>
+        </div>
+
+        <div class="slide fade">
+            <div class="title">Sammy</div>
+            <img src="images\sammy-2.jpg">
+            <div class="text">
+                Sammy is maybe a little taller than last week, but there is not a significant difference.
+            </div>
+        </div>
+
+        <div class="slide fade">
+            <div class="title">Ivy</div>
+            <img src="images\ivy-2.jpg">
+            <div class="text">
+                I am unsure the right conditions for Ivy. While I took the picture on the counter you can see the picture from week 1 to see where Ivy is located in the house. A few of Ivy's leaves died and were picked off.
+            </div>
+        </div>
+
+        <div class="slide fade">
+            <div class="title">Landry</div>
+            <img src="images\landry-2.jpg">
+            <div class="text">
+                Long and lanky, Landry loves to hang. Landry is doing really well and I'm pretty sure there are new leaves.
+            </div>
+        </div>
+
+
+        <div class="slide fade">
+            <div class="title">Mary</div>
+            <img src="images\mary-2.jpg">
+            <div class="text">
+                Mary is growing on me as my favorite plant. She is so wide and has a cool purple color. I noticed some of her leaves are rolled up and I'm not sure what it means.
+            </div>
+        </div>
+
+        <div class="slide fade">
+                <div class="title">Mary New Leaf</div>
+                <img src="images\mary-2-rolled.jpg">
+                <div class="text"></div>
+        </div>
+
+        <div class="slide fade">
+                <div class="title">Mary Burnt Leaf</div>
+                <img src="images\mary-2-burnt.jpg">
+                <div class="text"></div>
+        </div>
+
+        <div class="slide fade">
+            <div class="title">Penny</div>
+            <img src="images\penny-2.jpg">
+            <div class="text">
+                Penny is doing well and has a few new leaves coming in at the bottom. I used flash in this photo so it looks a little janky.
+            </div>
+        </div>
+
+        <div class="slide fade">
+            <div class="title">Georgia</div>
+            <img src="images\georgia-2.jpg">
+            <div class="text">
+                I forgot to take pictures of Georgia in week 1, but she is already growing! The second picture of Georgia shows hew growing upward.
+                Notice how the new leaves are lighter green.
+            </div>
+        </div>
+
+        <div class="slide fade">
+                <div class="title">Georgia New Leaf</div>
+                <img src="images\georgia-2-new.jpg">
+                <div class="text"></div>
+        </div>
+
+        <div class="slide fade">
+            <div class="title">Phil</div>
+            <img src="images\phil-2.jpg">
+            <div class="text">
+                Two of Phil's furthest leaves had to be cut (the one's furthest from the window). It seems like Phil is really gravitating toward the window light.
+            </div>
+        </div>
+
+        <div class="slide fade">
+            <div class="title">Ray</div>
+            <img src="images\ray-2.jpg">
+            <div class="text">
+                Please take a big moment of silence for Ray. This week he collapsed under his own weight. It was evident Ray wasn't doing well and when I came home one afternoon Ray was just too much of a burden upon himself.
+                Little Ray also passed away :(
+            </div>
+        </div>
+
+        <div id="slidePicker" style="text-align:center">
+        </div>
+
+    </div>
+    <br />
+
+
+    <script>
+        var currentSlide = 0;
+        init();
+        displaySlide(currentSlide);
+
+        $("#slideshow").click(function() {
+            displaySlide(currentSlide + 1);
+        });
+
+        function init()
+        {
+            var slides = $(".slide");
+            for (var i = 0; i < slides.length; i++)
+            {
+                var div = $("<div></div>")
+                div.addClass("numberText");
+                div.html((i + 1) + " / " + slides.length);
+                $(slides[i]).append(div);
+
+                var span = $("<span></span>")
+                span.addClass("dot");
+                span.attr("element", i);
+
+                span.click(function() {
+                    var index = parseInt($(this).attr("element"));
+                    displaySlide(index);
+                });
+
+                $("#slidePicker").append(span);
+            }
+        }
+
+        function displaySlide(n)
+        {
+            var slides = $(".slide");
+            if (slides.length == n) n = 0;
+            var dots = $(".dot");
+            slides.hide();
+            dots.removeClass("active");
+            $(slides[n]).show();
+            $(dots[n]).addClass("active");
+            currentSlide = n;
+        }
+
+    </script>
+</body>
