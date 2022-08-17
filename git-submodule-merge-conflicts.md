@@ -31,6 +31,8 @@ index <commit1>,<commit2>..0000000
 +++ b/<submodule>
 ```
 
+in this case, `commit1` is the commit referenced by the super repository in the target branch of the merge, and `commit2` is the commit referenced by the source branch, i.e. the branch being merged in.  In the `checkout` commands below, these are referenced by the flags `--ours` and `--theirs`, respectively.
+
 <i>2) The submodule repository does not exist on disk</i>
 
 ```
@@ -56,7 +58,9 @@ git add <path-to-submodule>
 Another similiar resolution strategy is:
 
 ```
+# use commit1:
 git checkout --ours <path-to-submodule> 
+# or, use commit2:
 # git checkout --theirs <path-to-submodule>
 git add <path-to-submodule>
 ```
