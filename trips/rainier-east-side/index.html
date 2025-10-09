@@ -6,11 +6,6 @@
 <style>
   /* ----- Base & Theme ----- */
   :root{
-    --bg:#ffffff;
-    --fg:#222222;
-    --muted:#666666;
-    --maxw: 72ch;               /* pleasant line length */
-    --radius: 12px;
     --space: 1.2rem;
   }
   @media (prefers-color-scheme: dark){
@@ -41,10 +36,22 @@
   /* ----- Media ----- */
   img{
     display:block;
-    max-width: 100%;
+    max-width: min(100%, 750px);
     width: 100%;
     height: auto;
     border-radius: var(--radius);
+    margin: 0 auto;
+  }
+  /* Center standalone images and their captions */
+  .image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem 0;
+  }
+  .image-container img {
+    width: auto;
+    max-width: min(100%, 750px);
   }
   /* Make your image “tables” responsive without rewriting content */
   table{ width:100%; border-collapse: collapse; margin: 0 0 1rem; }
@@ -99,8 +106,10 @@ This is a small blog post about my backpacking trip in Mt. Rainier October 6-8th
 
 <p>I arrived at the White River Wilderness Information Center at 8AM. Somewhat to my surprise, it was open and there was a ranger inside to assist me. Luckily, I was able to swap the itinerary without a problem. I was slightly worried about conditions up at Panhandle Gap right past Summerland due to snow (I did not bring spikes or anything like that), but the ranger reassured me it was completely snow free.</p>
 
+<div class="image-container">
 <img src="images\permit.jpg" title="Me holding my modified permit" width="400px">
 <div class="image-caption">Me holding my modified permit</div>
+</div>
 
 <p>This loop starts at Frying Pan creek where it meets the Wonderland trail (for reference, the Wonderland is a 93-mile trail that circles Mt. Rainier). The first part of this loop has you going south down the Wonderland and the second part north up the Eastside trial back to the beginning. You can park either directly at Frying Pan, or if you would rather walk ¾ a mile on the road to start the trip, you can park up the road at Owyhigh trailhead where the loop will spit you out. Eager to get going, I opted to park at Frying Pan creek so I could get on the trial immediately.</p>
 
@@ -112,11 +121,11 @@ This is a small blog post about my backpacking trip in Mt. Rainier October 6-8th
     <tr>
         <td>
             <img src="images\summerland-1.jpg" title="Stunning views of Rainier from Summerland" width="600px">
-            <div class="image-caption">Stunning views of Rainier from Summerland</div>
+            <div class="image-caption">Stunning views of Rainier from Summerland.</div>
         </td>
         <td>
             <img src="images\summerland-2.jpg" title="Rainier peaking out on the way to Summerland" width="600px">
-            <div class="image-caption">Rainier peaking out on the way to Summerland</div>
+            <div class="image-caption">Rainier peaking out on the way to Summerland.</div>
         </td>
     </tr>
 </table>
@@ -136,32 +145,32 @@ This is a small blog post about my backpacking trip in Mt. Rainier October 6-8th
 <table>
     <tr>
         <td>
-            <img src="images\panhandle-1.jpg" title="Crossing the Panhandle" width="600px">
-            <div class="image-caption">Crossing the Panhandle</div>
+            <img src="images\panhandle-1.jpg" title="Crossing the Panhandle Gap" width="600px">
+            <div class="image-caption">Crossing the Panhandle Gap.</div>
         </td>
         <td>
             <img src="images\out-of-panhandle.jpg" title="Climbing to the pass to begin the descent to Indian Bar" width="600px">
-            <div class="image-caption">Climbing to the pass to begin the descent to Indian Bar</div>
+            <div class="image-caption">Climbing to the pass to begin the descent to Indian Bar.</div>
         </td>
     </tr>
     <tr>
         <td>
             <img src="images\to-indian-bar.jpg" title="It got smokey on the way to Indian Bar" width="600px">
-            <div class="image-caption">It got smokey on the way to Indian Bar</div>
+            <div class="image-caption">It got smokey on the way to Indian Bar.</div>
         </td>
         <td>
             <img src="images\indian-bar-2.jpg" title="Another view of Indian Bar" width="600px">
-            <div class="image-caption">Another view of Indian Bar</div>
+            <div class="image-caption">Another view of Indian Bar.</div>
         </td>
     </tr>
     <tr>
         <td>
             <img src="images\indian-bar-sunset.jpg" title="Indian Bar at sunset" width="600px">
-            <div class="image-caption">Indian Bar at sunset</div>
+            <div class="image-caption">Indian Bar at sunset.</div>
         </td>
         <td>
             <img src="images\indian-bar-toilet.jpg" title="The best place to shit at Indian Bar" width="600px">
-            <div class="image-caption">The best place to shit at Indian Bar</div>
+            <div class="image-caption">The best place to shit at Indian Bar.</div>
         </td>
     </tr>
 </table>
@@ -169,7 +178,7 @@ This is a small blog post about my backpacking trip in Mt. Rainier October 6-8th
 <hr />
 
 <h2>Day 2</h2>
-<h3>Indian Bar → Deer Creek (17 miles, ~2700 ft. gain, ~4900 ft. descent)</h3>
+<h3>Indian Bar → Deer Creek (17 miles, ~2700 ft. ascent, ~4900 ft. descent)</h3>
 
 <p>I woke refreshed at 6:30AM, though the sky was still dark. Today would be my longest day on the trail, and I was eager to get moving. My sleeping pad had failed me again and was nearly flat by morning, even after I’d re-inflated it twice during the night. I ate breakfast perched on my bear canister, watching as the first light spilled into the Indian Bar. </p>
 
@@ -181,11 +190,11 @@ This is a small blog post about my backpacking trip in Mt. Rainier October 6-8th
     <tr>
         <td>
             <img src="images\out-of-indian-bar-3.jpg" title="Misty mountain tops" width="600px">
-            <div class="image-caption">Misty mountain tops</div>
+            <div class="image-caption">Misty mountain tops.</div>
         </td>
         <td>
             <img src="images\out-of-indian-bar-2.jpg" title="The view looking back on Rainier coming out of Indian Bar" width="600px">
-            <div class="image-caption">The view looking back on Rainier coming out of Indian Bar</div>
+            <div class="image-caption">The view of Rainier ascending out of Indian Bar.</div>
         </td>
     </tr>
 </table>
@@ -195,30 +204,24 @@ This is a small blog post about my backpacking trip in Mt. Rainier October 6-8th
 <table>
     <tr>
         <td>
-            <img src="images\mushroom-1.jpg" width="300px">
-            <div class="image-caption">Mushroom variety 1</div>
+            <img src="images\mushroom-1.jpg" width="200px">
         </td>
         <td>
-            <img src="images\mushroom-2.jpg" width="300px">
-            <div class="image-caption">Mushroom variety 2</div>
+            <img src="images\mushroom-2.jpg" width="200px">
         </td>
         <td>
-            <img src="images\mushroom-3.jpg" width="300px">
-            <div class="image-caption">Mushroom variety 3</div>
+            <img src="images\mushroom-3.jpg" width="200px">
         </td>
     </tr>
     <tr>
         <td>
-            <img src="images\mushroom-4.jpg" width="300px">
-            <div class="image-caption">Mushroom variety 4</div>
+            <img src="images\mushroom-4.jpg" width="200px">
         </td>
         <td>
-            <img src="images\mushroom-5.jpg" width="300px">
-            <div class="image-caption">Mushroom variety 5</div>
+            <img src="images\mushroom-5.jpg" width="200px">
         </td>
         <td>
-            <img src="images\mushroom-6.jpg" width="300px">
-            <div class="image-caption">Mushroom variety 6</div>
+            <img src="images\mushroom-6.jpg" width="200px">
         </td>
     </tr>
 </table>
@@ -233,7 +236,7 @@ This is a small blog post about my backpacking trip in Mt. Rainier October 6-8th
     <tr>
         <td>
             <img src="images\swimming-hole.jpg" title="A great place to relax at this watering hole" width="600px">
-            <div class="image-caption">A great place to relax at this watering hole</div>
+            <div class="image-caption">A great place to relax at this watering hole!</div>
         </td>
     </tr>
 </table>
@@ -245,7 +248,7 @@ This is a small blog post about my backpacking trip in Mt. Rainier October 6-8th
 <hr />
 
 <h2>Day 3</h2>
-<h3>Deer Creek → Car (9 miles, ~3000 ft. gain, ~1800 ft. descent)</h3>
+<h3>Deer Creek → Car (9 miles, ~3000 ft. ascent, ~1800 ft. descent)</h3>
 
 <p>The last day was all business. I woke at 6:30AM, ate granola with powdered milk and coffee, and was hiking by 7:30. I planned to push through the 3,000-foot, 4.5-mile climb and reach the car by 11.</p>
 
@@ -261,7 +264,7 @@ This is a small blog post about my backpacking trip in Mt. Rainier October 6-8th
         </td>
         <td>
             <img src="images\day-3-lake.jpg" title="A show of the meadow with a lake after the ascent and the mist lifted" width="600px">
-            <div class="image-caption">A view of the meadow with a lake after the ascent and the mist lifted</div>
+            <div class="image-caption">A view of the meadow with a lake.</div>
         </td>
     </tr>
 </table>
