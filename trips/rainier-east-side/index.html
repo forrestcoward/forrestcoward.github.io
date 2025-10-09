@@ -57,7 +57,6 @@
   }
   img {
     display:block;
-    max-width: min(100%, 750px);
     width: 100%;
     height: auto;
     margin: 0 auto;
@@ -76,10 +75,27 @@
     width:100%; 
     border-collapse: collapse; 
     margin: 0 0 1rem; 
+    display: flex;
+    flex-wrap: wrap;
+    gap: .8rem;
+  }
+  tr {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: .8rem;
   }
   td { 
     vertical-align: top; 
-    padding: .4rem; 
+    padding: 0;
+    flex: 1;
+    min-width: 500px;
+  }
+  @media (max-width: 768px) {
+    td {
+      min-width: 100%;
+      flex: none;
+    }
   }
   .image-caption { 
     color: var(--muted); 
