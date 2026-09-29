@@ -34,7 +34,7 @@
     margin: 0 auto;
     padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
   }
-  .post > p, .post > h2, .post > ul, .post > ol,
+  .post > p, .post > h2, .post > h3, .post > ul, .post > ol,
   .post-header, .chapter, .trip-nav {
     max-width: 720px;
     margin-left: auto;
@@ -54,6 +54,12 @@
     margin-bottom: 1rem;
     line-height: 1.3;
     font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  }
+  h3 {
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+    font-size: clamp(1.25rem, 1.1rem + .5vw, 1.5rem);
   }
   .eyebrow, .chapter-label {
     color: var(--accent);
@@ -119,7 +125,7 @@
   ul {
     padding-left: 1.2rem;
   }
-  img {
+  img, video {
     display:block;
     width: 100%;
     height: auto;
@@ -130,7 +136,7 @@
     max-width: 1200px;
     margin: 2rem auto;
   }
-  .photo img {
+  .photo img, .photo video {
     width: auto;
     max-width: 100%;
     max-height: 800px;
@@ -435,7 +441,15 @@
 
 <p>I didn't think the views from day one could be topped, but day three was easily one of the best days of hiking in my life. A steep climb out of the Twin Lakes took us up through beautiful golden larch trees towards Avion Ridge, eventually leading to a dramatic open ridge walk featuring 360-degree panoramic views along the continental divide and surrounding alpine meadows. Without a cloud in the sky, we could see a hundred different peaks in all directions. I imagine with bad weather this would be incredibly harrowing, but for us, it was an alpine dream. We spent a lot of time just marveling at the weather and how gorgeous it was. The descent down to Goat Lake was also notable featuring mixed rocky terrian and scrambles, running streams and waterfalls, and odd looking cotten plants, making it a visually diverse and unique experience.</p>
 
-<p>Goat lake itself was fine, I guess. You get a little spoiled with lakes out here :p</p>
+<p>Goat Lake did live up to its name! We spotted a family of mountain goats showing us how it's done. I've never seen them actually jump like this before.</p>
+
+<figure class="photo">
+    <video controls preload="metadata" playsinline aria-label="A mountain goat jumping between rocks at Goat Lake">
+        <source src="images/day-3/goat-jump.mp4" type="video/mp4">
+        Your browser does not support the video element.
+    </video>
+    <figcaption class="image-caption">Jumping the gap!</figcaption>
+</figure>
 
 <div class="photo-grid">
     <figure class="photo">
